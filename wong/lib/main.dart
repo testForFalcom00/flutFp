@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'WONG',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Cuma Wong Yang Bisa'),
     );
   }
 }
@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    post = fetchPost();
+//    post = fetchPost();
   }
   void _incrementCounter() {
     setState(() {
@@ -63,14 +63,14 @@ class _MyHomePageState extends State<MyHomePage> {
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-
+      post = fetchPost();
       _counter++;
     });
   }
 
   Future<Post> fetchPost() async {
     final response =
-    await http.get('https://api.usu.ac.id/1.0/users/3985/finger_prints/logs');
+    await http.post('https://api.usu.ac.id/1.0/users/3985/finger_prints/logs');
 
     if (response.statusCode == 201) {
       // If server returns an OK response, parse the JSON.
@@ -113,7 +113,11 @@ class _MyHomePageState extends State<MyHomePage> {
               future: post,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return Text(snapshot.data.res.toString());
+                  var result = StringBuffer();
+                  snapshot.data.res.forEach((item){
+                    result.write(item);
+                  });
+                  return Text(result.toString());
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }
@@ -135,13 +139,13 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class Post {
-  final List<String> res;
+  final List<dynamic> res;
 
   Post({this.res});
 
   factory Post.fromJson(List<dynamic> json) {
     return Post(
-      res: json[0]
+      res: json
     );
   }
 }
